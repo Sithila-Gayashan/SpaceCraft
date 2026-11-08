@@ -1,0 +1,1 @@
+{"expo":{"name":"SpaceCraft","slug":"spacecraft-planner","version":"1.0.0","orientation":"default","userInterfaceStyle":"light","android":{"package":"com.spacecraft.roomplanner"},"ios":{"bundleIdentifier":"com.spacecraft.roomplanner"},"plugins":["expo-sqlite"],"updates":{"enabled":false}}}
