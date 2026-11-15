@@ -262,6 +262,9 @@ export default function Designer({ route, navigation: n }) {
           >
             Space calculator · {metrics.percent.toFixed(1)}%
           </Button>
+          <Button icon="box" onPress={() => n.navigate("Room3D", { room, items, openings })}>
+            View in 3D
+          </Button>
           <Field label="Layout name" value={name} onChangeText={setName} />
           <Button primary icon="save" onPress={act(save)}>
             Save layout

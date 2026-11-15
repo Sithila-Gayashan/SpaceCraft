@@ -24,6 +24,23 @@ Open the project in an SDK 58 compatible Expo Go client, or build a native clien
 - `src/components` contains shared controls, the gesture-enabled SVG plan and category illustrations. `src/screens` implements dashboard, rooms, forms, catalogue, designer, calculator, saved layouts, details and settings. `src/navigation` combines five bottom tabs with a native stack.
 - Undo and redo retain up to 50 edit steps for an open design session. Save commits the complete draft. The editor checks before discarding unsaved changes.
 
+## 3D preview
+Open **View in 3D** from the room designer or saved layout details. The designer
+previews the current draft, including unsaved furniture positions. Drag to orbit,
+pinch or use the buttons to zoom, and choose Cutaway, All or Hidden walls.
+Reset view restores the initial camera and cutaway walls.
+
+The scene uses local procedural furniture shapes at the stored dimensions.
+North maps to negative Z, floor height is Y, and saved clockwise rotations are
+converted into the 3D coordinate system. Existing window records have no sill
+height, so this preview assumes 0.9 metres, lowered as needed beneath the ceiling.
+Doors start at floor height. Openings have translucent coloured panels.
+Previewing performs no database writes.
+
+Test 3D on a physical phone. Confirm rotated pieces match the 2D plan, try doors
+and windows on every wall, switch wall visibility, orbit, zoom and reset. Leave
+and reopen the preview, then return to the designer and verify the draft is intact.
+
 ## Verification
 ```sh
 npm test
