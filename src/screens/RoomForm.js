@@ -14,6 +14,8 @@ import {
 import { types, walls } from "../database/repository";
 import { useStudio } from "../database/context";
 import { fromDisplay } from "../services/geometry";
+import { openingPreview } from "../services/openingPreview";
+import OpeningPreview from "../components/OpeningPreview";
 const palette = ["#F4EEDD", "#E0EADC", "#E7E3EF", "#E5ECEF", "#F4E1D3"];
 const dims = ["width", "length", "height"];
 const asUnit = (n, u) =>
@@ -86,6 +88,7 @@ export default function RoomForm({ navigation: n, route }) {
   function update(i, key, v) {
     setOpenings(openings.map((o, j) => (i === j ? { ...o, [key]: v } : o)));
   }
+  const preview = openingPreview(values, openings, unit);
   return (
     <Page title={old ? "Edit room" : "New room"} nav={n}>
       <Field
@@ -133,12 +136,18 @@ export default function RoomForm({ navigation: n, route }) {
         ))}
       </Row>
       <T kind="section">Doors & windows</T>
+      <Card>
+        <T kind="section">Live room preview</T>
+        <OpeningPreview model={preview} unit={unit} color={color} />
+      </Card>
       <T kind="small">
         Measure offsets from the left on north/south walls and from the top on
         east/west walls.
       </T>
       {openings.map((o, i) => (
         <Card key={i}>
+          <T kind="section">Opening {i + 1}</T>
+          <OpeningPreview model={preview} selected={i} unit={unit} color={color} />
           <Choices
             options={["Door", "Window"]}
             value={o.opening_type}
@@ -158,6 +167,9 @@ export default function RoomForm({ navigation: n, route }) {
               onChangeText={(v) => update(i, d, v)}
             />
           ))}
+          {!!preview.entries[i].error && (
+            <T style={{ color: "#A44132" }}>{preview.entries[i].error}</T>
+          )}
           <Button danger onPress={() => setOpenings(openings.filter((_, j) => i !== j))}>
             Remove opening
           </Button>
