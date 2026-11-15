@@ -1,13 +1,15 @@
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, StatusBar, View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { openDatabaseAsync } from "expo-sqlite";
 import { repository } from "./src/database/repository";
 import { Store } from "./src/database/context";
 import StudioNavigation from "./src/navigation/StudioNavigation";
-import { T, Button, colors } from "./src/components/ui";
+import { T, Button } from "./src/components/ui";
+import { ThemeProvider, useTheme } from "./src/theme/ThemeContext";
 export default function App() {
+  const { colors } = useTheme();
   const [db, setDatabase] = useState(null),
     [error, setError] = useState(""),
     [attempt, setAttempt] = useState(0),
@@ -36,13 +38,15 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <StatusBar barStyle="dark-content" />
+        
         {db ? (
+          <ThemeProvider mode={db.theme()}>
           <Store.Provider
             value={{ db, version, refresh: () => setVersion((v) => v + 1) }}
           >
             <StudioNavigation />
           </Store.Provider>
+          </ThemeProvider>
         ) : (
           <View
             style={{

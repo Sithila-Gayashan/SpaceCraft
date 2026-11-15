@@ -197,6 +197,12 @@ function repository(db) {
       one("SELECT value FROM preferences WHERE key='unit'")?.value ?? "m",
     setUnit: (u) =>
       run("INSERT OR REPLACE INTO preferences VALUES('unit',?)", u),
+    theme: () =>
+      one("SELECT value FROM preferences WHERE key='theme'")?.value ?? "System",
+    setTheme: (mode) => {
+      if (!["Light", "Dark", "System"].includes(mode)) throw Error("Invalid appearance mode.");
+      run("INSERT OR REPLACE INTO preferences VALUES('theme',?)", mode);
+    },
   };
 }
 module.exports = { repository, types, walls };

@@ -1,10 +1,12 @@
 import React from "react";
 import Svg, { Rect, Line, Circle, Text as SvgText } from "react-native-svg";
-import { T, colors } from "./ui";
+import { T } from "./ui";
 import { display } from "../services/geometry";
 import { wallPoint } from "../services/openingPreview";
 
+import { useTheme } from "../theme/ThemeContext";
 export default function OpeningPreview({ model, selected, unit, color }) {
+  const { colors } = useTheme();
   if (!model.roomValid) {
     return <T kind="small">Enter room dimensions between 0.1 and 100 metres to see the plan.</T>;
   }
