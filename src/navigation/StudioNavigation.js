@@ -13,6 +13,7 @@ import {
 } from "../screens/Library";
 import RoomForm from "../screens/RoomForm";
 import Designer from "../screens/Designer";
+import Room3D from "../screens/Room3D";
 import { Calculator, Layout } from "../screens/Analysis";
 import { Icon } from "../components/ui";
 import { useTheme } from "../theme/ThemeContext";
@@ -74,6 +75,7 @@ export default function StudioNavigation() {
           Room,
           FurnitureDetails,
           Designer,
+          Room3D,
           Calculator,
           Layout,
         }).map(([name, component]) => (

@@ -12,6 +12,17 @@ npm start
 Open the project in an SDK 58 compatible Expo Go client, or build a native client with `npx expo run:android` (Android Studio and Android SDK required) or `npx expo run:ios` (macOS and Xcode required). A development session needs a connection to Metro. For a standalone Android build with bundled JavaScript use `npx expo run:android --variant release`. Install dependencies and native build tools before disconnecting. In a standalone build the planner runs locally, including its fonts, illustrations and SQLite catalogue.
 
 ## Workflow
+For a local browser preview, run `npx expo start --web --clear --port 8081`.
+In a second terminal run `npm run web:proxy`, then open `http://127.0.0.1:8083`.
+Expo's HTML middleware bypasses Metro's custom headers, so the local-only proxy
+adds the isolation headers to every response and forwards live-reload sockets.
+Restart Metro after changing `metro.config.js`, which bundles SQLite's WASM.
+A separately hosted web export must also
+serve `Cross-Origin-Opener-Policy: same-origin` and
+`Cross-Origin-Embedder-Policy: require-corp` over HTTPS (or localhost).
+Browser storage is separate from the phone's SQLite database. This browser
+preview is not an installable offline web app.
+
 1. Create a room. Choose its unit, dimensions and floor colour. Specify wall openings by offset from the left or top.
 2. Open the room and choose **Design a new layout**. Add pieces, drag on the grid and rotate the selected piece. The piece selector also reaches furniture hidden underneath another piece.
 3. Check the space calculator and save the layout by name. A room can have multiple designs. Shared footprints are allowed and highlighted.
@@ -23,6 +34,23 @@ Open the project in an SDK 58 compatible Expo Go client, or build a native clien
 - Occupied area is the union of all floor rectangles. A sweep across sorted x edges merges intersecting y intervals for each strip. Edge contact alone does not mark a collision.
 - `src/components` contains shared controls, the gesture-enabled SVG plan and category illustrations. `src/screens` implements dashboard, rooms, forms, catalogue, designer, calculator, saved layouts, details and settings. `src/navigation` combines five bottom tabs with a native stack.
 - Undo and redo retain up to 50 edit steps for an open design session. Save commits the complete draft. The editor checks before discarding unsaved changes.
+
+## 3D preview
+Open **View in 3D** from the room designer or saved layout details. The designer
+previews the current draft, including unsaved furniture positions. Drag to orbit,
+pinch or use the buttons to zoom, and choose Cutaway, All or Hidden walls.
+Reset view restores the initial camera and cutaway walls.
+
+The scene uses local procedural furniture shapes at the stored dimensions.
+North maps to negative Z, floor height is Y, and saved clockwise rotations are
+converted into the 3D coordinate system. Existing window records have no sill
+height, so this preview assumes 0.9 metres, lowered as needed beneath the ceiling.
+Doors start at floor height. Openings have translucent coloured panels.
+Previewing performs no database writes.
+
+Test 3D on a physical phone. Confirm rotated pieces match the 2D plan, try doors
+and windows on every wall, switch wall visibility, orbit, zoom and reset. Leave
+and reopen the preview, then return to the designer and verify the draft is intact.
 
 ## Verification
 ```sh

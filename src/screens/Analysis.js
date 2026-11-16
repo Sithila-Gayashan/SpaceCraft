@@ -77,6 +77,9 @@ export function Layout({ route, navigation: n }) {
         {room.unit} high
       </T>
       <Plan {...{ room, items }} openings={db.openings(room.id)} />
+      <Button icon="box" onPress={() => n.navigate("Room3D", { room, items, openings: db.openings(room.id) })}>
+        View in 3D
+      </Button>
       <Button
         primary
         icon="edit-3"
