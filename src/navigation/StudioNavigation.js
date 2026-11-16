@@ -1,5 +1,5 @@
 import React from "react";
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
@@ -14,7 +14,8 @@ import {
 import RoomForm from "../screens/RoomForm";
 import Designer from "../screens/Designer";
 import { Calculator, Layout } from "../screens/Analysis";
-import { colors, Icon } from "../components/ui";
+import { Icon } from "../components/ui";
+import { useTheme } from "../theme/ThemeContext";
 const Stack = createNativeStackNavigator(),
   Tab = createBottomTabNavigator();
 const tabs = [
@@ -25,6 +26,7 @@ const tabs = [
   ["Settings", Settings, "sliders"],
 ];
 function BottomNavigation() {
+ const { colors } = useTheme();
   return (
     <Tab.Navigator
       screenOptions={{
@@ -51,12 +53,15 @@ function BottomNavigation() {
   );
 }
 export default function StudioNavigation() {
+ const { colors, isDark } = useTheme();
+ const base = isDark ? DarkTheme : DefaultTheme;
   return (
     <NavigationContainer
       theme={{
-        ...DefaultTheme,
+        ...base,
         colors: {
-          ...DefaultTheme.colors,
+          ...base.colors,
+          card: colors.white, text: colors.ink, border: colors.line,
           background: colors.paper,
           primary: colors.green,
         },

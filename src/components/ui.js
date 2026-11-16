@@ -13,17 +13,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeIn } from "react-native-reanimated";
 import Feather from "@expo/vector-icons/Feather";
-export const colors = {
-  paper: "#F6F4ED",
-  ink: "#203B34",
-  muted: "#596B63",
-  green: "#165949",
-  light: "#DFEAE0",
-  line: "#D7DDD1",
-  white: "#FFFDF8",
-  danger: "#A44132",
-};
-export const styles = StyleSheet.create({
+import { useTheme } from "../theme/ThemeContext";
+const createStyles = (colors) => StyleSheet.create({
   page: { flex: 1, backgroundColor: colors.paper },
   body: {
     padding: 20,
@@ -68,12 +59,19 @@ export const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-export const T = ({ children, kind = "text", style }) => (
+export const T = ({ children, kind = "text", style }) => {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
+  return (
   <Text style={[styles[kind], style]}>{children}</Text>
 );
-export const Icon = ({ name, size = 18, color = colors.green }) => (
-  <Feather name={name} size={size} color={color} />
+};
+export const Icon = ({ name, size = 18, color }) => {
+ const { colors } = useTheme();
+ return (
+  <Feather name={name} size={size} color={color ?? colors.green} />
 );
+};
 export function CustomHeader({ title, kicker, back }) {
   return (
     <Animated.View entering={FadeIn.duration(220)} style={{ gap: 6 }}>
@@ -98,6 +96,8 @@ export function Page({
   children,
   scroll = true,
 }) {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   return (
     <SafeAreaView edges={["left", "right", "top"]} style={styles.page}>
       <KeyboardAvoidingView
@@ -128,7 +128,8 @@ export function Button({
   danger = false,
   disabled = false,
 }) {
-  const ink = primary ? "white" : danger ? colors.danger : colors.green;
+  const { colors } = useTheme();
+  const ink = primary ? colors.onAccent : danger ? colors.danger : colors.green;
   return (
     <Pressable
       accessibilityRole="button"
@@ -153,10 +154,14 @@ export function Button({
     </Pressable>
   );
 }
-export const Row = ({ children }) => <View style={styles.row}>{children}</View>;
-export const Card = ({ children, style }) => (
+export const Row = ({ children }) => <View style={{ flexDirection: "row", alignItems: "center", flexWrap: "wrap", gap: 8 }}>{children}</View>;
+export const Card = ({ children, style }) => {
+ const { colors } = useTheme();
+ const styles = createStyles(colors);
+ return (
   <View style={[styles.card, style]}>{children}</View>
 );
+};
 export function Field({
   label,
   value,
@@ -164,10 +169,14 @@ export function Field({
   numeric = false,
   ...rest
 }) {
-  return (
+ const { colors, isDark } = useTheme();
+ const styles = createStyles(colors);
+ return (
     <View style={{ gap: 5 }}>
       <T kind="small">{label}</T>
       <TextInput
+        keyboardAppearance={isDark ? "dark" : "light"}
+        selectionColor={colors.green}
         accessibilityLabel={label}
         style={styles.input}
         value={String(value ?? "")}
@@ -187,6 +196,7 @@ export const SearchBar = ({ value, onChangeText }) => (
   />
 );
 export function Choices({ options, value, onChange }) {
+ const { colors } = useTheme();
   return (
     <Row>
       {options.map((s) => (
@@ -204,7 +214,7 @@ export function Choices({ options, value, onChange }) {
             borderColor: colors.line,
           }}
         >
-          <Text style={{ color: s === value ? "white" : colors.ink }}>{s}</Text>
+          <Text style={{ color: s === value ? colors.onAccent : colors.ink }}>{s}</Text>
         </Pressable>
       ))}
     </Row>

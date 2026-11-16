@@ -16,7 +16,6 @@ import {
   Choices,
   act,
   confirm,
-  colors,
 } from "../components/ui";
 import { useStudio } from "../database/context";
 import { display } from "../services/geometry";
@@ -74,7 +73,7 @@ export function Home({ navigation: n }) {
     layouts = db.layouts();
   return (
     <Page title="SpaceCraft" kicker="Interior planning studio">
-      <Card style={{ backgroundColor: colors.ink, borderColor: colors.ink }}>
+      <Card style={{ backgroundColor: "#203B34", borderColor: "#203B34" }}>
         <Row>
           <Icon name="layers" color="#CCE0C9" />
           <T style={{ color: "#DCE8D7" }}>Welcome to your studio</T>
@@ -369,6 +368,12 @@ export function Settings() {
   const { db, refresh } = useStudio();
   return (
     <Page title="Studio settings">
+      <Card>
+        <T kind="section">Appearance</T>
+        <T kind="small">Choose a theme or follow your device settings.</T>
+        <Choices options={["Light", "Dark", "System"]} value={db.theme()}
+          onChange={mode => act(() => { db.setTheme(mode); refresh(); })()} />
+      </Card>
       <Card>
         <T kind="section">Default measurement unit</T>
         <T kind="small">Used when creating a room.</T>

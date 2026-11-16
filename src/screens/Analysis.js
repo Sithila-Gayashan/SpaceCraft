@@ -9,14 +9,15 @@ import {
   Card,
   Button,
   Field,
-  colors,
   act,
 } from "../components/ui";
 import { stats, display, size } from "../services/geometry";
 import { useStudio } from "../database/context";
 import Plan from "../components/Plan";
 import { dimensions } from "./Library";
+import { useTheme } from "../theme/ThemeContext";
 export function Metrics({ room, items }) {
+ const { colors } = useTheme();
   const s = stats(room, items),
     area = (v) => display(v, room.unit, true) + " " + room.unit + "²";
   return (

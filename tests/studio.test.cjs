@@ -123,10 +123,17 @@ test("offline SQLite workflow survives close and reopen, preserves valid state o
   assert.throws(() => db.saveRoom({ ...room, id: roomId, width: 1 }, []));
   assert.equal(db.room(roomId).width, 5);
   db.setUnit("ft");
+  assert.equal(db.theme(), "System");
+  db.setTheme("Light");
+  assert.equal(db.theme(), "Light");
+  db.setTheme("Dark");
+  assert.throws(() => db.setTheme("invalid"));
+  assert.equal(db.theme(), "Dark");
   session.close();
   session = connect(file);
   db = session.db;
   assert.equal(db.unit(), "ft");
+  assert.equal(db.theme(), "Dark");
   assert.equal(db.pieces(id)[0].position_x, 2);
   assert.equal(db.openings(roomId).length, 0);
   const copy = db.duplicate(db.layouts()[0]);

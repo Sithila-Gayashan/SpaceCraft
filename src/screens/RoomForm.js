@@ -16,11 +16,13 @@ import { useStudio } from "../database/context";
 import { fromDisplay } from "../services/geometry";
 import { openingPreview } from "../services/openingPreview";
 import OpeningPreview from "../components/OpeningPreview";
+import { useTheme } from "../theme/ThemeContext";
 const palette = ["#F4EEDD", "#E0EADC", "#E7E3EF", "#E5ECEF", "#F4E1D3"];
 const dims = ["width", "length", "height"];
 const asUnit = (n, u) =>
   String(Number((n / (u === "ft" ? 0.3048 : 1)).toFixed(9)));
 export default function RoomForm({ navigation: n, route }) {
+  const { colors } = useTheme();
   const { db, refresh } = useStudio(),
     old = route.params?.id ? db.room(route.params.id) : null;
   const [unit, setUnit] = useState(old?.unit ?? db.unit());
@@ -168,7 +170,7 @@ export default function RoomForm({ navigation: n, route }) {
             />
           ))}
           {!!preview.entries[i].error && (
-            <T style={{ color: "#A44132" }}>{preview.entries[i].error}</T>
+            <T style={{ color: colors.danger }}>{preview.entries[i].error}</T>
           )}
           <Button danger onPress={() => setOpenings(openings.filter((_, j) => i !== j))}>
             Remove opening

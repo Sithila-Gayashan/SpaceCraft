@@ -16,7 +16,9 @@ import { useStudio } from "../database/context";
 import { Browser, dimensions } from "./Library";
 import Plan from "../components/Plan";
 import { move, size, stats, display, place } from "../services/geometry";
+import { useTheme } from "../theme/ThemeContext";
 export default function Designer({ route, navigation: n }) {
+  const { colors } = useTheme();
   const { db, refresh } = useStudio(),
     { roomId, layoutId, addId } = route.params;
   const [room] = useState(() => db.room(roomId)),
@@ -155,7 +157,7 @@ export default function Designer({ route, navigation: n }) {
             <T kind="small">Doors in ochre · Windows in teal</T>
           </Card>
           {metrics.conflicts.size > 0 && (
-            <T style={{ color: "#A44132" }}>
+            <T style={{ color: colors.danger }}>
               {metrics.conflicts.size} pieces overlap. Move the outlined pieces
               to clear the warning.
             </T>
