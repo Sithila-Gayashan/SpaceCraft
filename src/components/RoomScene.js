@@ -1,7 +1,7 @@
 /* React Three Fiber uses Three.js properties on its native scene elements. */
 /* eslint-disable react/no-unknown-property */
 import React, { useEffect, useMemo } from "react";
-import { useThree } from "@react-three/fiber/native";
+import { useThree } from "@react-three/fiber";
 import { furnitureTransform, openingBounds, wallBox, wallPanels } from "../services/sceneGeometry";
 import { stats } from "../services/geometry";
 

@@ -12,6 +12,17 @@ npm start
 Open the project in an SDK 58 compatible Expo Go client, or build a native client with `npx expo run:android` (Android Studio and Android SDK required) or `npx expo run:ios` (macOS and Xcode required). A development session needs a connection to Metro. For a standalone Android build with bundled JavaScript use `npx expo run:android --variant release`. Install dependencies and native build tools before disconnecting. In a standalone build the planner runs locally, including its fonts, illustrations and SQLite catalogue.
 
 ## Workflow
+For a local browser preview, run `npx expo start --web --clear --port 8081`.
+In a second terminal run `npm run web:proxy`, then open `http://127.0.0.1:8083`.
+Expo's HTML middleware bypasses Metro's custom headers, so the local-only proxy
+adds the isolation headers to every response and forwards live-reload sockets.
+Restart Metro after changing `metro.config.js`, which bundles SQLite's WASM.
+A separately hosted web export must also
+serve `Cross-Origin-Opener-Policy: same-origin` and
+`Cross-Origin-Embedder-Policy: require-corp` over HTTPS (or localhost).
+Browser storage is separate from the phone's SQLite database. This browser
+preview is not an installable offline web app.
+
 1. Create a room. Choose its unit, dimensions and floor colour. Specify wall openings by offset from the left or top.
 2. Open the room and choose **Design a new layout**. Add pieces, drag on the grid and rotate the selected piece. The piece selector also reaches furniture hidden underneath another piece.
 3. Check the space calculator and save the layout by name. A room can have multiple designs. Shared footprints are allowed and highlighted.

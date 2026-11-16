@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Canvas } from "@react-three/fiber/native";
+import { Canvas } from "@react-three/fiber";
 import { GestureDetector, usePanGesture, usePinchGesture } from "react-native-gesture-handler";
 import { useIsFocused } from "@react-navigation/native";
 import { Button, Choices, CustomHeader, Row, T } from "../components/ui";
