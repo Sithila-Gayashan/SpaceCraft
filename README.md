@@ -11,17 +11,53 @@ npm start
 
 Open the project in an SDK 58 compatible Expo Go client, or build a native client with `npx expo run:android` (Android Studio and Android SDK required) or `npx expo run:ios` (macOS and Xcode required). A development session needs a connection to Metro. For a standalone Android build with bundled JavaScript use `npx expo run:android --variant release`. Install dependencies and native build tools before disconnecting. In a standalone build the planner runs locally, including its fonts, illustrations and SQLite catalogue.
 
-## Workflow
-For a local browser preview, run `npx expo start --web --clear --port 8081`.
-In a second terminal run `npm run web:proxy`, then open `http://127.0.0.1:8083`.
+## Run in a browser (local preview)
+
+After running `npm ci`, open two terminals in the project directory. If Expo is
+already running in the first terminal, stop it with Ctrl+C before continuing.
+
+**Terminal 1 — start Expo:**
+
+```sh
+npx expo start --web --clear --port 8081
+```
+
+**Terminal 2 — start the browser proxy:**
+
+```sh
+npm run web:proxy
+```
+
+Keep both terminals running and open **http://127.0.0.1:8083** in a modern browser
+on the same computer. If Expo automatically opens port 8081, use the port 8083
+link instead. Stop both processes with Ctrl+C when finished.
+
+### Why the proxy is needed
+
 Expo's HTML middleware bypasses Metro's custom headers, so the local-only proxy
 adds the isolation headers to every response and forwards live-reload sockets.
+These headers enable the browser's SharedArrayBuffer support required by SQLite.
+The native Android/iOS app does not need this proxy.
 Restart Metro after changing `metro.config.js`, which bundles SQLite's WASM.
 A separately hosted web export must also
 serve `Cross-Origin-Opener-Policy: same-origin` and
 `Cross-Origin-Embedder-Policy: require-corp` over HTTPS (or localhost).
 Browser storage is separate from the phone's SQLite database. This browser
 preview is not an installable offline web app.
+
+### Browser troubleshooting
+
+- **SharedArrayBuffer is not defined:** use `http://127.0.0.1:8083`, keep both
+  terminals running, and reload the page. Do not use the LAN IP or port 8081.
+- **Start Expo first / connection refused:** confirm Terminal 1 is running on
+  port 8081 and Terminal 2 is running the proxy.
+- **Port already in use:** stop the previous Expo or proxy process in its
+  terminal, then retry. If Expo offers another port, free port 8081 first so
+  that the default proxy can reach it.
+- **Phone rooms are missing:** browser and phone databases are separate. Create
+  a room in the browser to test; use the same browser and URL to reopen it.
+
+## Workflow
 
 1. Create a room. Choose its unit, dimensions and floor colour. Specify wall openings by offset from the left or top.
 2. Open the room and choose **Design a new layout**. Add pieces, drag on the grid and rotate the selected piece. The piece selector also reaches furniture hidden underneath another piece.
